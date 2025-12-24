@@ -1,2 +1,2 @@
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/Freemason-EAG/frontend-project-11/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Freemason-EAG/frontend-project-11/actions)
+[![Actions Status](https://github.com/Freemason-EAG/frontend-project-11/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Freemason-EAG/frontend-project-11/actions) [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-highlight.svg)](https://sonarcloud.io/summary/new_code?id=Freemason-EAG_frontend-project-11) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Freemason-EAG_frontend-project-11&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Freemason-EAG_frontend-project-11)
