@@ -1,23 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="light"> 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RSS-aggregator</title>
   </head>
-  <body>
-    <div id="app" class="container py-4">
-      <form id="rss-form" class="row g-3 align-items-center">
+  <body class="">
+    <header class="bg-dark text-white p-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+        <h1>RSS-aggregator</h1>
+        <p>Read all your RSS feeds in one place.</p>
+      <form action="" id="rss-form" class="row g-3 align-items-center">
         <div class="col-auto flex-grow-1">
         <label for="url-input" class="form-label visually-hidden">Link</label>
-        <input type="url" class="form-control" id ="url-input" placeholder="RSS link" required>
+        <input type="url" class="form-control w-100" id ="url-input" placeholder="RSS link" required>
         </div>
+
         <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="submit" class="btn btn-primary btn-md px-sm-5">Add</button>
         </div>
       </form>
-    </div>
+      <p class="py-2"><small><code>Example: https://lorem-rss.hexlet.app/feed</code></small></p>
+          </div>
+      </div>
+      </div>
+    </header>
+
+    <main class="p-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+    <section id="post-section">
+      <h2>Posts</h2>
+      <div id="post-container"></div>
+      
+    </section>
+          </div>
+        </div>
+      </div>
+    </main>
+    
     
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
+
+
+
