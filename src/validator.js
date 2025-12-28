@@ -5,7 +5,7 @@ const schema = yup.object({
 })
 
 const urlValidator = (value) => {
-  return schema.validate({ url: value.trim() })
+  return schema.validate({ url: value.trim() }, { abortEarly: false })
 }
 
 export default urlValidator
