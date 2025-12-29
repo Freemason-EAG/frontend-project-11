@@ -23,7 +23,7 @@ form.addEventListener('submit', (e) => {
   const { urlForm, feeds } = watchedState
   e.preventDefault()
   const formData = new FormData(e.target)
-  const input = formData.get('url')
+  const input = String(formData.get('url'))
   urlForm.errors = []
   urlValidator(input)
     .then(() => {
