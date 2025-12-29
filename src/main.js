@@ -28,7 +28,7 @@ form.addEventListener('submit', (e) => {
   urlValidator(input)
     .then(() => {
       if (isDupl(feeds, input)) {
-        throw new Error(`${input} has already been added`)
+        throw new Error(`RSS уже существует`)
       }
       else {
         feeds.push(createFeed(input))

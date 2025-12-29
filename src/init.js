@@ -3,7 +3,7 @@ import i18next from 'i18next'
 export default () => {
   const i18nInstance = i18next.createInstance()
   return i18nInstance.init({
-    lng: 'en',
+    lng: 'ru',
     debug: true,
     resources: {
       // ru, // языки я импортирую и добавлю, как только подготовлю переводы

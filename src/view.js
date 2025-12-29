@@ -14,7 +14,7 @@ const render = ({ urlForm }) => {
   else if (urlForm.errors.length === 0 && urlForm.valid === true) {
     urlInput.classList.add('is-valid')
     feedback.classList.add('text-success')
-    feedback.textContent = 'RSS uploaded successfully'
+    feedback.textContent = 'RSS успешно загружен'
   }
 }
 
