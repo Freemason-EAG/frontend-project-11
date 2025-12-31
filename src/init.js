@@ -1,4 +1,6 @@
 import i18next from 'i18next'
+import * as yup from 'yup'
+import ru from './locales/ru.js'
 
 export default () => {
   const i18nInstance = i18next.createInstance()
@@ -6,11 +8,19 @@ export default () => {
     lng: 'ru',
     debug: true,
     resources: {
-      // ru, // языки я импортирую и добавлю, как только подготовлю переводы
-      // en,
+      ru,
     },
   })
-    .then(() => {
+    .then (() => {
+      yup.setLocale({
+        mixed: {
+          required: () => i18nInstance.t('errors.required'),
+        },
+        string: {
+          url: () => i18nInstance.t('errors.url'),
+        },
+      })
+
       const state = {
         urlForm: {
           valid: false,

@@ -1,0 +1,26 @@
+export default {
+  translation: {
+    header: {
+      title: 'RSS агрегатор',
+      subtitle: 'Читай все свои RSS-каналы в одном месте.',
+    },
+    form: {
+      label: 'Ссылка RSS',
+      placeholder: 'Ссылка RSS',
+      button: 'Добавить',
+      example: 'Пример: https://lorem-rss.hexlet.app/feed',
+    },
+    sections: {
+      posts: 'Посты',
+    },
+    errors: {
+      required: 'Не должно быть пустым',
+      url: 'Ссылка должна быть валидным URL',
+      duplicate: 'RSS уже существует',
+      network: 'Ошибка сети',
+    },
+    success: {
+      rssLoaded: 'RSS успешно загружен',
+    },
+  },
+}
