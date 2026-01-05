@@ -1,6 +1,8 @@
 import render from './view.js'
 import urlValidator from './validator.js'
 import onChange from 'on-change'
+import netRequest from './net.js'
+import parser from './parser.js'
 
 const createFeed = url => ({
   id: new Date().toISOString(),
@@ -16,7 +18,6 @@ const updateTextlang = (i18n) => {
   document.querySelector('button[type="submit"]').textContent = i18n.t('form.button')
   document.querySelector('small code').textContent = i18n.t('form.example')
   document.querySelector('#url-input').placeholder = i18n.t('form.placeholder')
-  document.querySelector('h2').textContent = i18n.t('sections.posts')
 }
 
 const handlerForm = (watchedState, i18nInstance, input) => {
@@ -30,6 +31,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
       }
       else {
         feeds.push(createFeed(input))
+        netRequest(input)
 
         urlForm.valid = true
         urlForm.errors = []
