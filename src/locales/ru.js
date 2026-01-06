@@ -9,6 +9,7 @@ export default {
       placeholder: 'Ссылка RSS',
       button: 'Добавить',
       example: 'Пример: https://lorem-rss.hexlet.app/feed',
+      loading: 'Загрузка...',
     },
     sections: {
       posts: 'Посты',

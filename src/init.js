@@ -27,7 +27,7 @@ export default () => {
           errors: [],
         },
         feeds: [],
-        posts: {},
+        posts: [],
         uiState: {
           networkProcess: 'filling', // 'sending', 'finished', 'failed'
           networkErrors: [],

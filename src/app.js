@@ -4,9 +4,18 @@ import onChange from 'on-change'
 import netRequest from './net.js'
 import parser from './parser.js'
 
-const createFeed = url => ({
-  id: new Date().toISOString(),
+const createFeed = (url, title, description) => ({
+  id: crypto.randomUUID(),
   url,
+  title,
+  description,
+})
+
+const createPost = (feedId, title, link) => ({
+  id: crypto.randomUUID(),
+  feedId,
+  title,
+  link,
 })
 
 const isDupl = (feeds, url) => feeds.some(feed => feed.url === url)
@@ -21,22 +30,39 @@ const updateTextlang = (i18n) => {
 }
 
 const handlerForm = (watchedState, i18nInstance, input) => {
-  const { urlForm, feeds } = watchedState
+  const { urlForm, feeds, uiState } = watchedState
   const urlInput = document.querySelector('#url-input')
   urlForm.errors = []
+  uiState.networkErrors = []
+
   urlValidator(input)
     .then(() => {
       if (isDupl(feeds, input)) {
         throw new Error(i18nInstance.t('errors.duplicate'))
       }
       else {
-        feeds.push(createFeed(input))
+        uiState.networkProcess = 'sending'
         netRequest(input)
+          .then(parser)
+          .then(({ feed, posts }) => {
+            const newFeed = createFeed(input, feed.title, feed.description)
+            const newPosts = posts.map(post => createPost(newFeed.id, post.title, post.link))
+            watchedState.feeds.push(newFeed)
+            watchedState.posts.push(...newPosts)
+            console.log(newPosts)
+            urlForm.valid = true
+            urlForm.errors = []
+            uiState.networkProcess = 'finished'
+            uiState.networkErrors = []
 
-        urlForm.valid = true
-        urlForm.errors = []
-        urlInput.value = ''
-        urlInput.focus()
+            urlInput.value = ''
+            urlInput.focus()
+          })
+          .catch((error) => {
+            uiState.networkProcess = 'failed'
+            uiState.networkErrors = [i18nInstance.t('errors.network')]
+            urlInput.focus()
+          })
       }
     })
     .catch ((e) => {
