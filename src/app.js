@@ -9,6 +9,7 @@ const createFeed = (url, title, description) => ({
   url,
   title,
   description,
+
 })
 
 const createPost = (feedId, title, link) => ({
@@ -18,7 +19,10 @@ const createPost = (feedId, title, link) => ({
   link,
 })
 
-const isDupl = (feeds, url) => feeds.some(feed => feed.url === url)
+const isDupl = (feeds, url) => {
+  const allValues = Object.values(feeds.byId)
+  return allValues.some(feed => feed.url === url)
+}
 
 const updateTextlang = (i18n) => {
   document.querySelector('h1').textContent = i18n.t('header.title')
@@ -30,7 +34,7 @@ const updateTextlang = (i18n) => {
 }
 
 const handlerForm = (watchedState, i18nInstance, input) => {
-  const { urlForm, feeds, uiState } = watchedState
+  const { urlForm, feeds, posts, uiState, postsByFeedId } = watchedState
   const urlInput = document.querySelector('#url-input')
   urlForm.errors = []
   uiState.networkErrors = []
@@ -44,12 +48,17 @@ const handlerForm = (watchedState, i18nInstance, input) => {
         uiState.networkProcess = 'sending'
         netRequest(input)
           .then(parser)
-          .then(({ feed, posts }) => {
+          .then(({ feed, posts: parsedPosts }) => {
             const newFeed = createFeed(input, feed.title, feed.description)
-            const newPosts = posts.map(post => createPost(newFeed.id, post.title, post.link))
-            watchedState.feeds.push(newFeed)
-            watchedState.posts.push(...newPosts)
-            console.log(newPosts)
+            const newPosts = parsedPosts.map(post => createPost(newFeed.id, post.title, post.link))
+            feeds.byId[newFeed.id] = newFeed
+            feeds.allIds.push(newFeed.id)
+            newPosts.forEach((post) => {
+              posts.byId[post.id] = post
+              posts.allIds.push(post.id)
+            })
+            postsByFeedId[newFeed.id] = newPosts.map(post => post.id)
+
             urlForm.valid = true
             urlForm.errors = []
             uiState.networkProcess = 'finished'

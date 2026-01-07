@@ -43,13 +43,14 @@ const render = (state, i18nInstance) => {
 
 export default render
 
-const renderFeeds = (feeds) => {
+const renderFeeds = ({ byId }) => {
   const feedsContainer = document.querySelector('#feeds-container')
-  if (feeds.length === 0) {
+  const feedsArray = Object.values(byId)
+  if (feedsArray.length === 0) {
     feedsContainer.innerHTML = ''
     return
   }
-  const items = feeds.map(({ title, description }) => `
+  const items = feedsArray.map(({ title, description }) => `
     <li class="list-group-item border-0 border-end-0">
       <h3 class="h6 m-0">${title}</h3>
       <p class="m-0 small text-black-50">${description}</p>
@@ -65,13 +66,14 @@ const renderFeeds = (feeds) => {
       </div>`
 }
 
-const renderPosts = (posts) => {
+const renderPosts = ({ byId }) => {
   const postsContainer = document.querySelector('#posts-container')
-  if (posts.length === 0) {
+  const postsArray = Object.values(byId)
+  if (postsArray.length === 0) {
     postsContainer.innerHTML = ''
     return
   }
-  const items = posts.map(({ title, link }) => `
+  const items = postsArray.map(({ title, link }) => `
     <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
       <a href="${link}" class="fw-bold">${title}</a>
       <button type="button" class="btn btn-outline-primary btn-sm">

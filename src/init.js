@@ -26,8 +26,15 @@ export default () => {
           valid: false,
           errors: [],
         },
-        feeds: [],
-        posts: [],
+        feeds: {
+          byId: {},
+          allIds: [],
+        },
+        posts: {
+          byId: {},
+          allIds: [],
+        },
+        postsByFeedId: {},
         uiState: {
           networkProcess: 'filling', // 'sending', 'finished', 'failed'
           networkErrors: [],
