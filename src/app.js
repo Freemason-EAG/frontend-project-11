@@ -3,26 +3,8 @@ import urlValidator from './validator.js'
 import onChange from 'on-change'
 import netRequest from './net.js'
 import parser from './parser.js'
-
-const createFeed = (url, title, description) => ({
-  id: crypto.randomUUID(),
-  url,
-  title,
-  description,
-
-})
-
-const createPost = (feedId, title, link) => ({
-  id: crypto.randomUUID(),
-  feedId,
-  title,
-  link,
-})
-
-const isDupl = (feeds, url) => {
-  const allValues = Object.values(feeds.byId)
-  return allValues.some(feed => feed.url === url)
-}
+import { createFeed, createPost, isDupl } from './utils.js'
+import autoUpdate from './update.js'
 
 const updateTextlang = (i18n) => {
   document.querySelector('h1').textContent = i18n.t('header.title')
@@ -89,6 +71,7 @@ const app = ({ i18nInstance, state }) => {
   const watchedState = onChange(state, () => {
     render(state, i18nInstance)
   })
+  autoUpdate(watchedState)
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()

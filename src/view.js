@@ -43,9 +43,9 @@ const render = (state, i18nInstance) => {
 
 export default render
 
-const renderFeeds = ({ byId }) => {
+const renderFeeds = ({ byId, allIds }) => {
   const feedsContainer = document.querySelector('#feeds-container')
-  const feedsArray = Object.values(byId)
+  const feedsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
   if (feedsArray.length === 0) {
     feedsContainer.innerHTML = ''
     return
@@ -66,9 +66,9 @@ const renderFeeds = ({ byId }) => {
       </div>`
 }
 
-const renderPosts = ({ byId }) => {
+const renderPosts = ({ byId, allIds }) => {
   const postsContainer = document.querySelector('#posts-container')
-  const postsArray = Object.values(byId)
+  const postsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
   if (postsArray.length === 0) {
     postsContainer.innerHTML = ''
     return
@@ -92,3 +92,4 @@ const renderPosts = ({ byId }) => {
 }
 
 // http://feeds.bbci.co.uk/news/rss.xml
+// https://lorem-rss.hexlet.app/feed?unit=second&length=2
