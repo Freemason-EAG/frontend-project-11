@@ -16,5 +16,6 @@ git clone https://github.com/Freemason-EAG/frontend-project-11.git
 cd frontend-project-11
 npm install
 npm run dev
+```
 
 The application is deployed on Vercel: [https://frontend-project-11-7qoljii0k-arutyuns-projects.vercel.app](https://frontend-project-11-7qoljii0k-arutyuns-projects.vercel.app)
