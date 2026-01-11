@@ -17,7 +17,7 @@ const autoUpdate = (watchedState) => {
         const currFeedLinks = (postsByFeedId[id] || []).map(postId => posts.byId[postId].link)
         const uniqPosts = newPosts.filter(post => !currFeedLinks.includes(post.link))
         uniqPosts.forEach((post) => {
-          const newPost = createPost(id, post.title, post.link)
+          const newPost = createPost(id, post.title, post.link, post.description)
           posts.byId[newPost.id] = newPost
           posts.allIds.push(newPost.id)
           postsByFeedId[id].push(newPost.id)

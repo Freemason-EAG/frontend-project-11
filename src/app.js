@@ -32,7 +32,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
           .then(parser)
           .then(({ feed, posts: parsedPosts }) => {
             const newFeed = createFeed(input, feed.title, feed.description)
-            const newPosts = parsedPosts.map(post => createPost(newFeed.id, post.title, post.link))
+            const newPosts = parsedPosts.map(post => createPost(newFeed.id, post.title, post.link, post.description))
             feeds.byId[newFeed.id] = newFeed
             feeds.allIds.push(newFeed.id)
             newPosts.forEach((post) => {
@@ -80,7 +80,36 @@ const app = ({ i18nInstance, state }) => {
     handlerForm(watchedState, i18nInstance, input)
   })
   render(watchedState, i18nInstance)
-  return watchedState
+
+  const postsContainer = document.querySelector('#posts-container')
+  postsContainer.addEventListener('click', (event) => {
+    const button = event.target.closest('.btn-outline-primary')
+    const { posts } = watchedState
+    if (button) {
+      const postId = button.dataset.id
+      const post = posts.byId[postId]
+      if (!post) return
+      watchedState.modal = {
+        isOpen: true,
+        readPost: {
+          id: postId,
+          postTitle: post.title,
+          postDescription: post.description,
+          postLink: post.link,
+        },
+      }
+      watchedState.uiState.readPostsIds.push(postId)
+      console.log(watchedState.uiState.readPostsIds)
+    }
+  
+  })
+  const modalElement = document.querySelector('#modal-window')
+  if (modalElement) {
+    modalElement.addEventListener('hidden.bs.modal', () => {
+      watchedState.modal.isOpen = false
+      watchedState.modal.readPost = null
+    })
+  }
 }
 
 export default app

@@ -1,3 +1,5 @@
+import { Modal } from 'bootstrap'
+
 const render = (state, i18nInstance) => {
   const { urlForm, uiState } = state
   const urlInput = document.querySelector('#url-input')
@@ -38,7 +40,8 @@ const render = (state, i18nInstance) => {
   }
 
   renderFeeds(state.feeds)
-  renderPosts(state.posts)
+  renderPosts(state.posts, state.uiState.readPostsIds)
+  renderModal(state)
 }
 
 export default render
@@ -66,20 +69,23 @@ const renderFeeds = ({ byId, allIds }) => {
       </div>`
 }
 
-const renderPosts = ({ byId, allIds }) => {
+const renderPosts = ({ byId, allIds }, readPostsIds ) => {
   const postsContainer = document.querySelector('#posts-container')
   const postsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
   if (postsArray.length === 0) {
     postsContainer.innerHTML = ''
     return
   }
-  const items = postsArray.map(({ title, link }) => `
+  const items = postsArray.map(({ id, title, link }) => {
+    const isRead = readPostsIds.includes(id)
+    const fontStyle = isRead ? 'fw-normal' : 'fw-bold'
+    return `
     <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
-      <a href="${link}" class="fw-bold">${title}</a>
-      <button type="button" class="btn btn-outline-primary btn-sm">
+      <a href="${link}" class="${fontStyle}" target="_blank" rel="noopener noreferrer">${title}</a>
+      <button type="button" data-id="${id}" class="btn btn-outline-primary btn-sm">
         Просмотр
       </button>
-    </li>`).join('')
+    </li>`}).join('')
   postsContainer.innerHTML = `
    <div class="card border-0">
     <div class="card-body">
@@ -89,6 +95,29 @@ const renderPosts = ({ byId, allIds }) => {
       ${items}
       </ul>
     </div>`
+}
+
+const renderModal = (state) => {
+  const { modal } = state
+  const { isOpen, readPost } = modal
+
+  if (!isOpen || !readPost) return
+
+  const modalElement = document.querySelector('#modal-window')
+
+  if (modalElement.classList.contains('show')) return 
+
+  const { postTitle, postDescription, postLink } = readPost
+
+  document.querySelector('#modal-title').textContent = postTitle
+  document.querySelector('#modal-description').textContent = postDescription
+  document.querySelector('#modal-link').setAttribute('href', postLink)
+
+  let modalInstance = Modal.getInstance(modalElement)
+  if (!modalInstance) modalInstance = new Modal(modalElement)
+  
+  modalInstance.show()
+
 }
 
 // http://feeds.bbci.co.uk/news/rss.xml

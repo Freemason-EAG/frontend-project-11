@@ -6,11 +6,12 @@ const createFeed = (url, title, description) => ({
 
 })
 
-const createPost = (feedId, title, link) => ({
+const createPost = (feedId, title, link, description) => ({
   id: crypto.randomUUID(),
   feedId,
   title,
   link,
+  description,
 })
 
 const isDupl = (feeds, url) => {

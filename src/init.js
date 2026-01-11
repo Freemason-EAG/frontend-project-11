@@ -38,6 +38,11 @@ export default () => {
         uiState: {
           networkProcess: 'filling', // 'sending', 'finished', 'failed'
           networkErrors: [],
+          readPostsIds: [],
+        },
+        modal: {
+          isOpen: false,
+          readPost: null,
         },
       }
       return { i18nInstance, state }

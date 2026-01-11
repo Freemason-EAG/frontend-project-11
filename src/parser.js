@@ -16,10 +16,12 @@ const parser = (xmlFormat) => {
       .map((post) => {
         const postTitleEl = post.querySelector('title')
         const postLinkEl = post.querySelector('link')
+        const postDescriptionEl = post.querySelector('description')
         if (!postTitleEl || !postLinkEl) return null
         return {
           title: postTitleEl.textContent,
           link: postLinkEl.textContent,
+          description: postDescriptionEl?.textContent || '',
         }
       })
       .filter(Boolean)
