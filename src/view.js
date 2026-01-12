@@ -7,19 +7,19 @@ const render = (state, i18nInstance) => {
   const submitButton = document.querySelector('button[type="submit"]')
 
   urlInput.classList.remove('is-valid', 'is-invalid')
-  // feedback.classList.remove('text-success', 'text-danger')
+  feedback.classList.remove('text-success', 'text-danger')
   // feedback.textContent = ''
 
   if (uiState.networkProcess === 'sending') {
     submitButton.disabled = true
-    feedback.classList.remove('text-success', 'text-danger')
+    // feedback.classList.remove('text-success', 'text-danger')
     feedback.textContent = i18nInstance.t('form.loading')
   }
 
   else if (uiState.networkProcess === 'finished' && urlForm.valid) {
     submitButton.disabled = false
     urlInput.classList.add('is-valid')
-    feedback.classList.remove('text-danger')
+    // feedback.classList.remove('text-danger')
     feedback.classList.add('text-success')
     feedback.textContent = i18nInstance.t('success.rssLoaded')
   }
