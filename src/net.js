@@ -9,10 +9,7 @@ const netRequest = (url) => {
       return response.json()
     })
     .then((data) => {
-      if (data.status.http_code === 200) {
-        return data.contents
-      }
-      throw new Error('Network response was not ok.')
+      return data.contents
     })
     .catch ((error) => {
       throw new Error(`Network error: ${error.message}`)
