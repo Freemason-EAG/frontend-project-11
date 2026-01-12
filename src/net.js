@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const netRequest = (url) => {
-  const allOriginsUrl = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`
+  const allOriginsUrl = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`
 
   return axios.get(allOriginsUrl)
     .then((response) => {

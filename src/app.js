@@ -76,7 +76,8 @@ const app = ({ i18nInstance, state }) => {
   form.addEventListener('submit', (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    const input = String(formData.get('url')).trim()
+    const urlValue = formData.get('url')
+    const input = (typeof urlValue === 'string' ? urlValue : '').trim()
     handlerForm(watchedState, i18nInstance, input)
   })
   render(watchedState, i18nInstance)
@@ -101,7 +102,6 @@ const app = ({ i18nInstance, state }) => {
       watchedState.uiState.readPostsIds.push(postId)
       console.log(watchedState.uiState.readPostsIds)
     }
-  
   })
   const modalElement = document.querySelector('#modal-window')
   if (modalElement) {

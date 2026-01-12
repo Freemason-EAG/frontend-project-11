@@ -14,8 +14,9 @@ const autoUpdate = (watchedState) => {
     netRequest(url)
       .then(parser)
       .then(({ posts: newPosts }) => {
-        const currFeedLinks = (postsByFeedId[id] || []).map(postId => posts.byId[postId].link)
-        const uniqPosts = newPosts.filter(post => !currFeedLinks.includes(post.link))
+        const curLinksArr = (postsByFeedId[id] || []).map(postId => posts.byId[postId].link)
+        const currFeedLinks = new Set(curLinksArr)
+        const uniqPosts = newPosts.filter(post => !currFeedLinks.has(post.link))
         uniqPosts.forEach((post) => {
           const newPost = createPost(id, post.title, post.link, post.description)
           posts.byId[newPost.id] = newPost
