@@ -16,7 +16,10 @@ const netRequest = (url, i18nInstance) => {
       return content
     })
     .catch ((error) => {
-      throw new Error(`Network error: ${error.message}`)
+      if (error.message === i18nInstance.t('errors.notRss')) {
+        throw error
+      }
+      throw new Error(i18nInstance.t('errors.network'))
     })
 }
 
