@@ -52,7 +52,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
           })
           .catch((error) => {
             uiState.networkProcess = 'failed'
-            uiState.networkErrors = ['errors.message']
+            uiState.networkErrors = [error.message]
             urlInput.focus()
           })
       }
