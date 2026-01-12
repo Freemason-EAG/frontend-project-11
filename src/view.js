@@ -7,17 +7,19 @@ const render = (state, i18nInstance) => {
   const submitButton = document.querySelector('button[type="submit"]')
 
   urlInput.classList.remove('is-valid', 'is-invalid')
-  feedback.classList.remove('text-success', 'text-danger')
-  feedback.textContent = ''
+  // feedback.classList.remove('text-success', 'text-danger')
+  // feedback.textContent = ''
 
   if (uiState.networkProcess === 'sending') {
     submitButton.disabled = true
+    feedback.classList.remove('text-success', 'text-danger')
     feedback.textContent = i18nInstance.t('form.loading')
   }
 
   else if (uiState.networkProcess === 'finished' && urlForm.valid) {
     submitButton.disabled = false
     urlInput.classList.add('is-valid')
+    feedback.classList.remove('text-danger')
     feedback.classList.add('text-success')
     feedback.textContent = i18nInstance.t('success.rssLoaded')
   }
@@ -69,7 +71,7 @@ const renderFeeds = ({ byId, allIds }) => {
       </div>`
 }
 
-const renderPosts = ({ byId, allIds }, readPostsIds ) => {
+const renderPosts = ({ byId, allIds }, readPostsIds) => {
   const postsContainer = document.querySelector('#posts-container')
   const postsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
   if (postsArray.length === 0) {
@@ -85,7 +87,8 @@ const renderPosts = ({ byId, allIds }, readPostsIds ) => {
       <button type="button" data-id="${id}" class="btn btn-outline-primary btn-sm">
         Просмотр
       </button>
-    </li>`}).join('')
+    </li>`
+  }).join('')
   postsContainer.innerHTML = `
    <div class="card border-0">
     <div class="card-body">
@@ -105,7 +108,7 @@ const renderModal = (state) => {
 
   const modalElement = document.querySelector('#modal-window')
 
-  if (modalElement.classList.contains('show')) return 
+  if (modalElement.classList.contains('show')) return
 
   const { postTitle, postDescription, postLink } = readPost
 
@@ -115,9 +118,8 @@ const renderModal = (state) => {
 
   let modalInstance = Modal.getInstance(modalElement)
   if (!modalInstance) modalInstance = new Modal(modalElement)
-  
-  modalInstance.show()
 
+  modalInstance.show()
 }
 
 // http://feeds.bbci.co.uk/news/rss.xml

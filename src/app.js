@@ -18,6 +18,7 @@ const updateTextlang = (i18n) => {
 const handlerForm = (watchedState, i18nInstance, input) => {
   const { urlForm, feeds, posts, uiState, postsByFeedId } = watchedState
   const urlInput = document.querySelector('#url-input')
+  uiState.networkProcess = 'filling'
   urlForm.errors = []
   uiState.networkErrors = []
 
