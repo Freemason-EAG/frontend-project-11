@@ -1,15 +1,19 @@
-const netRequest = (url) => {
+const netRequest = (url, i18nInstance) => {
   const allOriginsUrl = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`
 
   return fetch(allOriginsUrl)
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`${response.status}`)
+        throw new Error(`Network error: ${response.status}`)
       }
       return response.json()
     })
     .then((data) => {
-      return data.contents
+      const content = data.contents
+      if (!content.startsWith('<?xml') && !content.includes('<rss')) {
+        throw new Error(i18nInstance.t('errors.notRss'))
+      }
+      return content
     })
     .catch ((error) => {
       throw new Error(`Network error: ${error.message}`)

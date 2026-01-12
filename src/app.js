@@ -29,7 +29,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
       }
       else {
         uiState.networkProcess = 'sending'
-        netRequest(input)
+        netRequest(input, i18nInstance)
           .then(parser)
           .then(({ feed, posts: parsedPosts }) => {
             const newFeed = createFeed(input, feed.title, feed.description)
@@ -52,7 +52,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
           })
           .catch((error) => {
             uiState.networkProcess = 'failed'
-            uiState.networkErrors = [i18nInstance.t('errors.network')]
+            uiState.networkErrors = ['errors.message']
             urlInput.focus()
           })
       }

@@ -19,6 +19,7 @@ export default {
       url: 'Ссылка должна быть валидным URL',
       duplicate: 'RSS уже существует',
       network: 'Ошибка сети',
+      notRss: 'Ресурс не содержит валидный RSS',
     },
     success: {
       rssLoaded: 'RSS успешно загружен',
