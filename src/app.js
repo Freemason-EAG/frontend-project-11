@@ -6,8 +6,8 @@ import parser from './parser.js'
 import { createFeed, createPost } from './utils.js'
 import autoUpdate from './update.js'
 
-const handlerForm = (watchedState, i18nInstance, input, { urlInput }) => {
-  const { urlForm, feeds, posts, uiState, postsByFeedId } = watchedState
+const handlerForm = (watchedState, i18nInstance, input) => {
+  const { urlForm, feeds, posts, uiState, modal, postsByFeedId } = watchedState
   uiState.networkProcess = 'filling'
   urlForm.errors = []
   uiState.networkErrors = []
@@ -16,9 +16,10 @@ const handlerForm = (watchedState, i18nInstance, input, { urlInput }) => {
   urlValidator(input, arrUrls, i18nInstance)
     .then(() => {
       uiState.networkProcess = 'sending'
-      netRequest(input, i18nInstance)
-        .then(parser)
-        .then(({ feed, posts: parsedPosts }) => {
+      return netRequest(input, i18nInstance)
+        .then((xml) => {
+          const parsedXml = parser(xml)
+          const { feed, posts: parsedPosts } = parsedXml
           const newFeed = createFeed(input, feed.title, feed.description)
           const newPosts = parsedPosts.map(post => createPost(newFeed.id, post.title, post.link, post.description))
           feeds.byId[newFeed.id] = newFeed
@@ -32,21 +33,18 @@ const handlerForm = (watchedState, i18nInstance, input, { urlInput }) => {
           urlForm.valid = true
           urlForm.errors = []
           uiState.networkProcess = 'finished'
+          modal.isOpen = false
+          modal.readPost = null
           uiState.networkErrors = []
-
-          urlInput.value = ''
-          urlInput.focus()
         })
         .catch((error) => {
           uiState.networkProcess = 'failed'
           uiState.networkErrors = [error.message]
-          urlInput.focus()
         })
     })
     .catch ((e) => {
       urlForm.errors = [e.message]
       urlForm.valid = false
-      urlInput.focus()
     })
 }
 
@@ -73,11 +71,9 @@ const app = ({ i18nInstance, state }) => {
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    const urlValue = formData.get('url')
-    const input = (typeof urlValue === 'string' ? urlValue : '').trim()
+    const input = formData.get('url').trim() // значение может быть null если у input нет атрибута name
     handlerForm(watchedState, i18nInstance, input, elements)
   })
-  render(watchedState, i18nInstance, elements)
 
   elements.postsContainer.addEventListener('click', (event) => {
     const button = event.target.closest('.btn-outline-primary')

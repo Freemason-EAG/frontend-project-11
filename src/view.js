@@ -20,6 +20,9 @@ const render = (state, i18nInstance, elements) => {
     // feedback.classList.remove('text-danger')
     feedback.classList.add('text-success')
     feedback.textContent = i18nInstance.t('success.rssLoaded')
+
+    urlInput.value = ''
+    urlInput.focus()
   }
 
   else if (uiState.networkProcess === 'failed' && uiState.networkErrors.length > 0) {
@@ -27,6 +30,8 @@ const render = (state, i18nInstance, elements) => {
     urlInput.classList.add('is-invalid')
     feedback.classList.add('text-danger')
     feedback.textContent = uiState.networkErrors[0]
+
+    urlInput.focus()
   }
 
   else if (urlForm.errors.length > 0 && !urlForm.valid) {
