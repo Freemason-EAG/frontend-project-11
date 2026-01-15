@@ -1,10 +1,8 @@
 import { Modal } from 'bootstrap'
 
-const render = (state, i18nInstance) => {
+const render = (state, i18nInstance, elements) => {
+  const { urlInput, feedback, submitButton } = elements
   const { urlForm, uiState } = state
-  const urlInput = document.querySelector('#url-input')
-  const feedback = document.querySelector('.feedback')
-  const submitButton = document.querySelector('button[type="submit"]')
 
   urlInput.classList.remove('is-valid', 'is-invalid')
   feedback.classList.remove('text-success', 'text-danger')
@@ -41,15 +39,14 @@ const render = (state, i18nInstance) => {
     submitButton.disabled = false
   }
 
-  renderFeeds(state.feeds)
-  renderPosts(state.posts, state.uiState.readPostsIds)
-  renderModal(state)
+  renderFeeds(state.feeds, elements)
+  renderPosts(state.posts, state.uiState.readPostsIds, elements)
+  renderModal(state, elements)
 }
 
 export default render
 
-const renderFeeds = ({ byId, allIds }) => {
-  const feedsContainer = document.querySelector('#feeds-container')
+const renderFeeds = ({ byId, allIds }, { feedsContainer }) => {
   const feedsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
   if (feedsArray.length === 0) {
     feedsContainer.innerHTML = ''
@@ -71,8 +68,7 @@ const renderFeeds = ({ byId, allIds }) => {
       </div>`
 }
 
-const renderPosts = ({ byId, allIds }, readPostsIds) => {
-  const postsContainer = document.querySelector('#posts-container')
+const renderPosts = ({ byId, allIds }, readPostsIds, { postsContainer }) => {
   const postsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
   if (postsArray.length === 0) {
     postsContainer.innerHTML = ''
@@ -100,21 +96,19 @@ const renderPosts = ({ byId, allIds }, readPostsIds) => {
     </div>`
 }
 
-const renderModal = (state) => {
+const renderModal = (state, { modalElement, modalTitle, modalDescription, modalLink }) => {
   const { modal } = state
   const { isOpen, readPost } = modal
 
   if (!isOpen || !readPost) return
 
-  const modalElement = document.querySelector('#modal-window')
-
   if (modalElement.classList.contains('show')) return
 
   const { postTitle, postDescription, postLink } = readPost
 
-  document.querySelector('#modal-title').textContent = postTitle
-  document.querySelector('#modal-description').textContent = postDescription
-  document.querySelector('#modal-link').setAttribute('href', postLink)
+  modalTitle.textContent = postTitle
+  modalDescription.textContent = postDescription
+  modalLink.setAttribute('href', postLink)
 
   let modalInstance = Modal.getInstance(modalElement)
   if (!modalInstance) modalInstance = new Modal(modalElement)
@@ -123,4 +117,6 @@ const renderModal = (state) => {
 }
 
 // http://feeds.bbci.co.uk/news/rss.xml
+// https://www.nasa.gov/rss/dyn/breaking_news.rss
+// https://www.theguardian.com/world/rss
 // https://lorem-rss.hexlet.app/feed?unit=second&length=2

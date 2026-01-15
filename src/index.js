@@ -1,4 +1,4 @@
-import './style.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import init from './init.js'
 import app from './app.js'

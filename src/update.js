@@ -2,7 +2,7 @@ import netRequest from './net.js'
 import parser from './parser.js'
 import { createPost } from './utils.js'
 
-const autoUpdate = (watchedState) => {
+const autoUpdate = (watchedState, i18nInstance) => {
   const { feeds: { byId, allIds }, posts, postsByFeedId } = watchedState
 
   const allFeeds = allIds.map(id => ({
@@ -11,7 +11,7 @@ const autoUpdate = (watchedState) => {
     feed: byId[id],
   }))
   allFeeds.forEach(({ id, url }) => {
-    netRequest(url)
+    netRequest(url, i18nInstance)
       .then(parser)
       .then(({ posts: newPosts }) => {
         const curLinksArr = (postsByFeedId[id] || []).map(postId => posts.byId[postId].link)
@@ -28,7 +28,7 @@ const autoUpdate = (watchedState) => {
         console.log(`${id}:`, error.message)
       })
   })
-  setTimeout(() => autoUpdate(watchedState), 5000)
+  setTimeout(() => autoUpdate(watchedState, i18nInstance), 5000)
 }
 
 export default autoUpdate

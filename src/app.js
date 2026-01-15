@@ -6,18 +6,8 @@ import parser from './parser.js'
 import { createFeed, createPost, isDupl } from './utils.js'
 import autoUpdate from './update.js'
 
-const updateTextlang = (i18n) => {
-  document.querySelector('h1').textContent = i18n.t('header.title')
-  document.querySelector('header p').textContent = i18n.t('header.subtitle')
-  document.querySelector('label[for="url-input"]').textContent = i18n.t('form.label')
-  document.querySelector('button[type="submit"]').textContent = i18n.t('form.button')
-  document.querySelector('small code').textContent = i18n.t('form.example')
-  document.querySelector('#url-input').placeholder = i18n.t('form.placeholder')
-}
-
-const handlerForm = (watchedState, i18nInstance, input) => {
+const handlerForm = (watchedState, i18nInstance, input, { urlInput }) => {
   const { urlForm, feeds, posts, uiState, postsByFeedId } = watchedState
-  const urlInput = document.querySelector('#url-input')
   uiState.networkProcess = 'filling'
   urlForm.errors = []
   uiState.networkErrors = []
@@ -65,26 +55,35 @@ const handlerForm = (watchedState, i18nInstance, input) => {
 }
 
 const app = ({ i18nInstance, state }) => {
-  const form = document.querySelector('#rss-form')
+  const elements = {
+    form: document.querySelector('#rss-form'),
+    urlInput: document.querySelector('#url-input'),
+    postsContainer: document.querySelector('#posts-container'),
+    modalElement: document.querySelector('#modal-window'),
 
-  updateTextlang(i18nInstance)
+    feedback: document.querySelector('.feedback'),
+    feedsContainer: document.querySelector('#feeds-container'),
+    submitButton: document.querySelector('button[type="submit"]'),
+    modalTitle: document.querySelector('#modal-title'),
+    modalDescription: document.querySelector('#modal-description'),
+    modalLink: document.querySelector('#modal-link'),
+  }
 
   const watchedState = onChange(state, () => {
-    render(state, i18nInstance)
+    render(state, i18nInstance, elements)
   })
-  autoUpdate(watchedState)
+  autoUpdate(watchedState, i18nInstance)
 
-  form.addEventListener('submit', (e) => {
+  elements.form.addEventListener('submit', (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const urlValue = formData.get('url')
     const input = (typeof urlValue === 'string' ? urlValue : '').trim()
-    handlerForm(watchedState, i18nInstance, input)
+    handlerForm(watchedState, i18nInstance, input, elements)
   })
-  render(watchedState, i18nInstance)
+  render(watchedState, i18nInstance, elements)
 
-  const postsContainer = document.querySelector('#posts-container')
-  postsContainer.addEventListener('click', (event) => {
+  elements.postsContainer.addEventListener('click', (event) => {
     const button = event.target.closest('.btn-outline-primary')
     const { posts } = watchedState
     if (button) {
@@ -101,12 +100,10 @@ const app = ({ i18nInstance, state }) => {
         },
       }
       watchedState.uiState.readPostsIds.push(postId)
-      console.log(watchedState.uiState.readPostsIds)
     }
   })
-  const modalElement = document.querySelector('#modal-window')
-  if (modalElement) {
-    modalElement.addEventListener('hidden.bs.modal', () => {
+  if (elements.modalElement) {
+    elements.modalElement.addEventListener('hidden.bs.modal', () => {
       watchedState.modal.isOpen = false
       watchedState.modal.readPost = null
     })
