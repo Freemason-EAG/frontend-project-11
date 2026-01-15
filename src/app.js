@@ -3,7 +3,7 @@ import urlValidator from './validator.js'
 import onChange from 'on-change'
 import netRequest from './net.js'
 import parser from './parser.js'
-import { createFeed, createPost, isDupl } from './utils.js'
+import { createFeed, createPost } from './utils.js'
 import autoUpdate from './update.js'
 
 const handlerForm = (watchedState, i18nInstance, input, { urlInput }) => {
@@ -12,40 +12,36 @@ const handlerForm = (watchedState, i18nInstance, input, { urlInput }) => {
   urlForm.errors = []
   uiState.networkErrors = []
 
-  urlValidator(input)
+  const arrUrls = Object.values(feeds.byId).map(feed => feed.url)
+  urlValidator(input, arrUrls, i18nInstance)
     .then(() => {
-      if (isDupl(feeds, input)) {
-        throw new Error(i18nInstance.t('errors.duplicate'))
-      }
-      else {
-        uiState.networkProcess = 'sending'
-        netRequest(input, i18nInstance)
-          .then(parser)
-          .then(({ feed, posts: parsedPosts }) => {
-            const newFeed = createFeed(input, feed.title, feed.description)
-            const newPosts = parsedPosts.map(post => createPost(newFeed.id, post.title, post.link, post.description))
-            feeds.byId[newFeed.id] = newFeed
-            feeds.allIds.push(newFeed.id)
-            newPosts.forEach((post) => {
-              posts.byId[post.id] = post
-              posts.allIds.push(post.id)
-            })
-            postsByFeedId[newFeed.id] = newPosts.map(post => post.id)
-
-            urlForm.valid = true
-            urlForm.errors = []
-            uiState.networkProcess = 'finished'
-            uiState.networkErrors = []
-
-            urlInput.value = ''
-            urlInput.focus()
+      uiState.networkProcess = 'sending'
+      netRequest(input, i18nInstance)
+        .then(parser)
+        .then(({ feed, posts: parsedPosts }) => {
+          const newFeed = createFeed(input, feed.title, feed.description)
+          const newPosts = parsedPosts.map(post => createPost(newFeed.id, post.title, post.link, post.description))
+          feeds.byId[newFeed.id] = newFeed
+          feeds.allIds.push(newFeed.id)
+          newPosts.forEach((post) => {
+            posts.byId[post.id] = post
+            posts.allIds.push(post.id)
           })
-          .catch((error) => {
-            uiState.networkProcess = 'failed'
-            uiState.networkErrors = [error.message]
-            urlInput.focus()
-          })
-      }
+          postsByFeedId[newFeed.id] = newPosts.map(post => post.id)
+
+          urlForm.valid = true
+          urlForm.errors = []
+          uiState.networkProcess = 'finished'
+          uiState.networkErrors = []
+
+          urlInput.value = ''
+          urlInput.focus()
+        })
+        .catch((error) => {
+          uiState.networkProcess = 'failed'
+          uiState.networkErrors = [error.message]
+          urlInput.focus()
+        })
     })
     .catch ((e) => {
       urlForm.errors = [e.message]

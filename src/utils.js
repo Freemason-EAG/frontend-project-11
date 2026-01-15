@@ -14,9 +14,4 @@ const createPost = (feedId, title, link, description) => ({
   description,
 })
 
-const isDupl = (feeds, url) => {
-  const allValues = Object.values(feeds.byId)
-  return allValues.some(feed => feed.url === url)
-}
-
-export { createFeed, createPost, isDupl }
+export { createFeed, createPost }
