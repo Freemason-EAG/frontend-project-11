@@ -65,7 +65,8 @@ const app = ({ i18nInstance, state }) => {
 
   const watchedState = onChange(state, (path) => {
     if (path.startsWith('urlForm')
-      || path === 'uiState.networkProcess') {
+      || path === 'uiState.networkProcess'
+      || path === 'uiState.networkErrors') {
       renderForm(state, i18nInstance, elements)
       return
     }

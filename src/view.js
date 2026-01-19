@@ -169,3 +169,4 @@ export { renderForm, renderFeeds, renderPosts, renderModal }
 // https://www.nasa.gov/rss/dyn/breaking_news.rss
 // https://www.theguardian.com/world/rss
 // https://lorem-rss.hexlet.app/feed?unit=second&length=2
+// https://lorem-rss.hexlet.app/not-rss - невалидный
