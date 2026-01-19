@@ -6,11 +6,11 @@ const parser = (xmlFormat) => {
 
   const doc = pars.parseFromString(xmlFormat, 'application/xml')
   const errorNode = doc.querySelector('parsererror')
-  if (errorNode) throw new Error ('Parsing failed')
+  if (errorNode) throw new Error ('ParsingFailed')
   else {
     const feedTitleEl = doc.querySelector('channel title')
     const feedDescriptionEl = doc.querySelector('channel description')
-    if (!feedTitleEl || !feedDescriptionEl) throw new Error('Invalid RSS')
+    if (!feedTitleEl || !feedDescriptionEl) throw new Error('InvalidRss')
     const feed = {
       title: feedTitleEl.textContent,
       description: feedDescriptionEl.textContent,
