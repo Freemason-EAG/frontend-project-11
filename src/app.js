@@ -1,9 +1,9 @@
-import render from './view.js'
+import { renderForm, renderFeeds, renderPosts, renderModal } from './view.js'
 import urlValidator from './validator.js'
 import onChange from 'on-change'
 import netRequest from './net.js'
 import parser from './parser.js'
-import { createFeed, createPost } from './utils.js'
+import { createFeed, createPost, handleNetError } from './utils.js'
 import autoUpdate from './update.js'
 
 const handlerForm = (watchedState, i18nInstance, input) => {
@@ -16,7 +16,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
   urlValidator(input, arrUrls, i18nInstance)
     .then(() => {
       uiState.networkProcess = 'sending'
-      return netRequest(input, i18nInstance)
+      return netRequest(input)
         .then((xml) => {
           const parsedXml = parser(xml)
           const { feed, posts: parsedPosts } = parsedXml
@@ -39,7 +39,7 @@ const handlerForm = (watchedState, i18nInstance, input) => {
         })
         .catch((error) => {
           uiState.networkProcess = 'failed'
-          uiState.networkErrors = [error.message]
+          uiState.networkErrors = [handleNetError(error, i18nInstance)]
         })
     })
     .catch ((e) => {
@@ -63,15 +63,33 @@ const app = ({ i18nInstance, state }) => {
     modalLink: document.querySelector('#modal-link'),
   }
 
-  const watchedState = onChange(state, () => {
-    render(state, i18nInstance, elements)
+  const watchedState = onChange(state, (path) => {
+    if (path.startsWith('urlForm')
+      || path === 'uiState.networkProcess') {
+      renderForm(state, i18nInstance, elements)
+      return
+    }
+    else if (path.startsWith('feeds')) {
+      renderFeeds(state.feeds, elements)
+      return
+    }
+    else if (path.startsWith('posts')
+      || path.startsWith('uiState.readPostsIds')) {
+      renderPosts(state.posts, state.uiState.readPostsIds, elements)
+      return
+    }
+    else if (path.startsWith('modal')) {
+      renderModal(state, elements)
+      return
+    }
   })
+
   autoUpdate(watchedState, i18nInstance)
 
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    const input = formData.get('url').trim() // значение может быть null если у input нет атрибута name
+    const input = formData.get('url').trim()
     handlerForm(watchedState, i18nInstance, input, elements)
   })
 
@@ -94,12 +112,13 @@ const app = ({ i18nInstance, state }) => {
       watchedState.uiState.readPostsIds.push(postId)
     }
   })
-  if (elements.modalElement) {
-    elements.modalElement.addEventListener('hidden.bs.modal', () => {
-      watchedState.modal.isOpen = false
-      watchedState.modal.readPost = null
-    })
-  }
 }
 
 export default app
+
+// if (elements.modalElement) {
+//   elements.modalElement.addEventListener('hidden.bs.modal', () => {
+//     watchedState.modal.isOpen = false
+//     watchedState.modal.readPost = null
+//   })
+// }

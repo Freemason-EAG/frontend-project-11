@@ -1,4 +1,7 @@
 const parser = (xmlFormat) => {
+  if (!xmlFormat.startsWith('<?xml') && !xmlFormat.includes('<rss')) {
+    throw new Error('notRss')
+  }
   const pars = new DOMParser()
 
   const doc = pars.parseFromString(xmlFormat, 'application/xml')

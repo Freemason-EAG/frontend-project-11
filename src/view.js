@@ -1,6 +1,6 @@
 import { Modal } from 'bootstrap'
 
-const render = (state, i18nInstance, elements) => {
+const renderForm = (state, i18nInstance, elements) => {
   const { urlInput, feedback, submitButton } = elements
   const { urlForm, uiState } = state
 
@@ -43,38 +43,56 @@ const render = (state, i18nInstance, elements) => {
   else {
     submitButton.disabled = false
   }
-
-  renderFeeds(state.feeds, elements)
-  renderPosts(state.posts, state.uiState.readPostsIds, elements)
-  renderModal(state, elements)
 }
 
-export default render
-
 const renderFeeds = ({ byId, allIds }, { feedsContainer }) => {
-  const feedsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
+  const feedsArray = [...allIds].reverse().map(id => byId[id])
   if (feedsArray.length === 0) {
     feedsContainer.innerHTML = ''
     return
   }
-  const items = feedsArray.map(({ title, description }) => `
-    <li class="list-group-item border-0 border-end-0">
-      <h3 class="h6 m-0">${title}</h3>
-      <p class="m-0 small text-black-50">${description}</p>
-    </li>`).join('')
-  feedsContainer.innerHTML = `
-      <div class="card border-0">
-      <div class="card-body">
-      <h2 class="card-title h4">Фиды</h2>
-      </div>
-      <ul class="list-group border-0 rounded-0">
-      ${items}
-      </ul>
-      </div>`
+  const items = feedsArray.map(({ title, description }) => {
+    const li = document.createElement('li')
+    li.classList.add('list-group-item', 'border-0', 'border-end-0')
+
+    const h3 = document.createElement('h3')
+    h3.classList.add('h6', 'm-0')
+    h3.textContent = title
+
+    const p = document.createElement('p')
+    p.classList.add('m-0', 'small', 'text-black-50')
+    p.textContent = description
+
+    li.appendChild(h3)
+    li.appendChild(p)
+    return li
+  })
+
+  const card = document.createElement('div')
+  card.classList.add('card', 'border-0')
+
+  const cardBody = document.createElement('div')
+  cardBody.classList.add('card-body')
+
+  const cardTitle = document.createElement('h2')
+  cardTitle.classList.add('card-title', 'h4')
+  cardTitle.textContent = 'Фиды'
+
+  cardBody.appendChild(cardTitle)
+
+  const listGroup = document.createElement('ul')
+  listGroup.classList.add('list-group', 'border-0', 'rounded-0')
+  items.forEach(item => listGroup.appendChild(item))
+
+  card.appendChild(cardBody)
+  card.appendChild(listGroup)
+
+  feedsContainer.innerHTML = ''
+  feedsContainer.appendChild(card)
 }
 
 const renderPosts = ({ byId, allIds }, readPostsIds, { postsContainer }) => {
-  const postsArray = [...allIds].reverse().map(id => byId[id]) // делаем копию allIds, переворачиваем его, проходимся по его id и получаем массив элементов byId c id из allIds в указанном порядке
+  const postsArray = [...allIds].reverse().map(id => byId[id])
   if (postsArray.length === 0) {
     postsContainer.innerHTML = ''
     return
@@ -82,23 +100,47 @@ const renderPosts = ({ byId, allIds }, readPostsIds, { postsContainer }) => {
   const items = postsArray.map(({ id, title, link }) => {
     const isRead = readPostsIds.includes(id)
     const fontStyle = isRead ? 'fw-normal' : 'fw-bold'
-    return `
-    <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0">
-      <a href="${link}" class="${fontStyle}" target="_blank" rel="noopener noreferrer">${title}</a>
-      <button type="button" data-id="${id}" class="btn btn-outline-primary btn-sm">
-        Просмотр
-      </button>
-    </li>`
-  }).join('')
-  postsContainer.innerHTML = `
-   <div class="card border-0">
-    <div class="card-body">
-    <h2 class="card-title h4">Посты</h2>
-    </div>
-      <ul class="list-group border-0 rounded-0">
-      ${items}
-      </ul>
-    </div>`
+
+    const li = document.createElement('li')
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0')
+
+    const a = document.createElement('a')
+    a.classList.add(`${fontStyle}`)
+    a.setAttribute('href', `${link}`)
+    a.setAttribute('target', '_blank')
+    a.setAttribute('rel', 'noopener noreferrer')
+    a.textContent = `${title}`
+
+    const button = document.createElement('button')
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm')
+    button.type = 'button'
+    button.dataset.id = id
+    button.textContent = 'Просмотр'
+
+    li.appendChild(a)
+    li.appendChild(button)
+    return li
+  })
+  const card = document.createElement('div')
+  card.classList.add('card', 'border-0')
+
+  const cardBody = document.createElement('div')
+  cardBody.classList.add('card-body')
+
+  const cardTitle = document.createElement('h2')
+  cardTitle.classList.add('card-title', 'h4')
+  cardTitle.textContent = 'Посты'
+
+  const listGroup = document.createElement('ul')
+  listGroup.classList.add('list-group', 'border-0', 'rounded-0')
+
+  items.forEach(item => listGroup.appendChild(item))
+  cardBody.appendChild(cardTitle)
+  card.appendChild(cardBody)
+  card.appendChild(listGroup)
+
+  postsContainer.innerHTML = ''
+  postsContainer.appendChild(card)
 }
 
 const renderModal = (state, { modalElement, modalTitle, modalDescription, modalLink }) => {
@@ -120,6 +162,8 @@ const renderModal = (state, { modalElement, modalTitle, modalDescription, modalL
 
   modalInstance.show()
 }
+
+export { renderForm, renderFeeds, renderPosts, renderModal }
 
 // http://feeds.bbci.co.uk/news/rss.xml
 // https://www.nasa.gov/rss/dyn/breaking_news.rss

@@ -20,6 +20,8 @@ export default {
       duplicate: 'RSS уже существует',
       network: 'Ошибка сети',
       notRss: 'Ресурс не содержит валидный RSS',
+      invalidRss: 'Неверный формат RSS',
+      parsingFailed: 'Не удалось выполнить парсинг данных',
     },
     success: {
       rssLoaded: 'RSS успешно загружен',
