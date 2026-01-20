@@ -68,20 +68,16 @@ const app = ({ i18nInstance, state }) => {
       || path === 'uiState.networkProcess'
       || path === 'uiState.networkErrors') {
       renderForm(state, i18nInstance, elements)
-      return
     }
     else if (path.startsWith('feeds')) {
       renderFeeds(state.feeds, elements)
-      return
     }
     else if (path.startsWith('posts')
       || path.startsWith('uiState.readPostsIds')) {
       renderPosts(state.posts, state.uiState.readPostsIds, elements)
-      return
     }
     else if (path.startsWith('modal')) {
       renderModal(state, elements)
-      return
     }
   })
 
@@ -91,7 +87,7 @@ const app = ({ i18nInstance, state }) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const input = formData.get('url').trim()
-    handlerForm(watchedState, i18nInstance, input, elements)
+    handlerForm(watchedState, i18nInstance, input)
   })
 
   elements.postsContainer.addEventListener('click', (event) => {
@@ -116,10 +112,3 @@ const app = ({ i18nInstance, state }) => {
 }
 
 export default app
-
-// if (elements.modalElement) {
-//   elements.modalElement.addEventListener('hidden.bs.modal', () => {
-//     watchedState.modal.isOpen = false
-//     watchedState.modal.readPost = null
-//   })
-// }
