@@ -18,4 +18,6 @@ npm install
 npm run dev
 ```
 
-The application is deployed on Vercel: [https://frontend-project-11-7qoljii0k-arutyuns-projects.vercel.app](https://frontend-project-11-7qoljii0k-arutyuns-projects.vercel.app)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://frontend-project-11-omega-steel.vercel.app)
+
+The application is deployed on Vercel and available at: https://frontend-project-11-omega-steel.vercel.app
